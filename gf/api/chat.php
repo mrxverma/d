@@ -19,7 +19,7 @@ $history=array_reverse($history);
 $messages = [['role'=>'system','content'=>$personality]];
 foreach($history as $h){ $messages[] = $h; }
 $messages[]=['role'=>'user','content'=>$message];
-$key = getenv('OPENAI_API_KEY');
+$key=$see;
 $assistant='';
 if($key){
   $ch = curl_init('https://api.openai.com/v1/chat/completions');
