@@ -3,7 +3,7 @@ header('Content-Type: application/json');
 require_once __DIR__.'/../db.php';
 $input=json_decode(file_get_contents('php://input'),true);
 $text=$input['text']??'';
-$key=getenv('OPENAI_API_KEY');
+$key=$see;
 if($key && $text){
   $prompt="Extract any durable preference, fact or goal worth remembering in ≤ 1 sentence. If none, output null.\n\n".$text;
   $ch = curl_init('https://api.openai.com/v1/chat/completions');
