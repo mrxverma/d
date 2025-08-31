@@ -34,10 +34,9 @@ function createSlide(item){
   slide.dataset.id=item.id;
   const wrap=slide.querySelector('.video-wrap');
   wrap.dataset.ytid=parseYtId(item.link);
-    slide.querySelector('.like-count').textContent=item.likes_count;
-    const likeBtn=slide.querySelector('.like-btn');
-    if(localStorage.getItem('liked:'+item.id)) likeBtn.dataset.liked="true";
-    likeBtn.addEventListener('click',()=>like(item.id,slide,likeBtn));
+
+  slide.querySelector('.like-count').textContent=item.likes_count;
+  slide.querySelector('.like-btn').addEventListener('click',()=>like(item.id,slide));
   const commentBtn=slide.querySelector('.comment-btn');
   const commentsEl=slide.querySelector('.comments');
   commentBtn.addEventListener('click',()=>{
@@ -58,10 +57,9 @@ function createSlide(item){
   return slide;
 }
 
-async function like(id,slide,btn){
+async function like(id,slide){
   if(localStorage.getItem('liked:'+id)) return;
   localStorage.setItem('liked:'+id,'1');
-  btn.dataset.liked="true";
   const countEl=slide.querySelector('.like-count');
   countEl.textContent=parseInt(countEl.textContent)+1;
   const res=await fetch(API.like,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:`short_id=${id}`});
