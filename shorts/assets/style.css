@@ -44,13 +44,8 @@ main#feed::-webkit-scrollbar{display:none}
   display:flex;align-items:center;justify-content:center;
 }
 .video-wrap iframe{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  width:100vw;
-  height:calc(100vw*16/9);
-  border:none;
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  height:100vh;width:calc(100vh*9/16);border:none;
 }
 .ui{
   position:absolute;right:1rem;bottom:4rem;display:flex;flex-direction:column;gap:1rem;
