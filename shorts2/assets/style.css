@@ -25,3 +25,14 @@ html,body{height:100%;margin:0;}
        height: 100vh;
        width: calc(100vh * 9 / 16); */
 }
+:root { --header-h: 60px; }
+
+header {
+    height: var(--header-h);
+}
+main {
+    padding-top: var(--header-h);
+}
+.slide {
+    height: calc(100vh - var(--header-h));
+}
