@@ -3,45 +3,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portfolio</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Prakhar Verma — Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-  <header class="site-header">
-    <nav class="nav">
-      <a href="#about">About</a>
-      <a href="#projects">Projects</a>
-      <a href="#contact">Contact</a>
+  <header class="border-b border-slate-200">
+    <nav class="max-w-7xl mx-auto flex items-center justify-between py-4 px-4">
+      <div class="text-xl font-bold"><a href="index.html">PV</a></div>
+      <div class="flex gap-6 text-sm">
+        <a href="index.html" class="hover:text-indigo-600">Home</a>
+        <a href="projects.html" class="hover:text-indigo-600">Projects</a>
+        <a href="achievements.html" class="hover:text-indigo-600">Achievements</a>
+        <a href="blog.html" class="hover:text-indigo-600">Blog</a>
+        <a href="resume.html" class="hover:text-indigo-600">Resume</a>
+        <a href="contact.html" class="hover:text-indigo-600">Contact</a>
+      </div>
     </nav>
   </header>
   <main>
-    <section id="about">
-      <h1>Your Name</h1>
-      <p>A short introduction goes here. Describe your skills and experience.</p>
-    </section>
-    <section id="projects">
-      <h2>Projects</h2>
-      <article class="project">
-        <h3>Project One</h3>
-        <p>Brief description of your first showcased project.</p>
-      </article>
-      <article class="project">
-        <h3>Project Two</h3>
-        <p>Brief description of another project.</p>
-      </article>
-    </section>
-    <section id="contact">
-      <h2>Contact</h2>
-      <form id="contact-form">
-        <label>Name<br /><input type="text" name="name" required /></label>
-        <label>Email<br /><input type="email" name="email" required /></label>
-        <label>Message<br /><textarea name="message" rows="5" required></textarea></label>
-        <button type="submit">Send</button>
-      </form>
+    <section class="text-center py-20 px-4">
+      <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight">Prakhar Verma — Code Whisperer, Math Mind, Future IITian</h1>
+      <p class="mt-4 text-lg sm:text-xl text-slate-600">Building fast, elegant systems that make complexity feel simple. 12th-grade prodigy crafting performant web apps, sharp algorithms, and ideas that punch above their weight.</p>
+      <div class="mt-8 flex justify-center gap-4">
+        <a href="projects.html" class="inline-flex items-center gap-2 rounded-2xl bg-indigo-600 px-5 py-3 text-white hover:bg-indigo-500 transition">View Projects</a>
+        <a href="resume.html" class="inline-flex items-center gap-2 rounded-2xl bg-slate-200 px-5 py-3 text-slate-900 hover:bg-slate-300 transition">Download Resume</a>
+      </div>
+      <div class="mt-8 flex flex-wrap justify-center gap-4 text-sm">
+        <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700">RMO</span>
+        <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700">Cyber Olympiad</span>
+        <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700">Top-tier Math Competitions</span>
+        <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700">Open-source Contributor</span>
+      </div>
+      <div class="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto">
+        <div class="text-center">
+          <p class="text-3xl font-bold"><span class="counter" data-target="250">0</span>+</p>
+          <p class="mt-2 text-sm">algorithm problems solved</p>
+        </div>
+        <div class="text-center">
+          <p class="text-3xl font-bold"><span class="counter" data-target="5">0</span>+</p>
+          <p class="mt-2 text-sm">end-to-end projects shipped</p>
+        </div>
+        <div class="text-center">
+          <p class="text-3xl font-bold"><span class="counter" data-target="96.6">0</span>%</p>
+          <p class="mt-2 text-sm">Boards (Class 10)</p>
+        </div>
+        <div class="text-center">
+          <p class="text-3xl font-bold">&infin;</p>
+          <p class="mt-2 text-sm">curiosity</p>
+        </div>
+      </div>
     </section>
   </main>
-  <footer>
-    <p>&copy; 2024 Your Name</p>
+  <footer class="py-6 text-center text-sm text-slate-600">
+    &copy; 2024 Prakhar Verma
   </footer>
   <script src="script.js"></script>
 </body>
