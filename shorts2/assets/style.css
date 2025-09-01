@@ -3,3 +3,25 @@ html,body{height:100%;margin:0;}
 .slide{height:100vh;scroll-snap-align:start;position:relative;display:flex;justify-content:center;align-items:center;background:#000;}
 .video-wrap iframe{width:100%;height:100%;border:0;}
 .ui{position:absolute;top:50%;right:1rem;transform:translateY(-50%);display:flex;flex-direction:column;gap:.5rem;}
+.slide {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.video-wrap {
+    position: absolute;
+    inset: 0;               /* fill the slide */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-wrap iframe {
+    width: 100%;
+    height: 100%;
+    /* or maintain 9:16 aspect:
+       height: 100vh;
+       width: calc(100vh * 9 / 16); */
+}
