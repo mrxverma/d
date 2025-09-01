@@ -21,6 +21,7 @@
     <section class="slide" data-id="">
         <div class="video-wrap"></div>
         <div class="ui">
+            <button class="volume-btn" aria-label="Toggle sound">🔇</button>
             <button class="like-btn" aria-label="Like"><span class="heart">❤️</span> <span class="like-count"></span></button>
             <button class="comment-btn" aria-label="Comments">💬</button>
         </div>
