@@ -1,7 +1,6 @@
 let page=1,pageSize=10,loading=false,hasMore=true;
 let soundOn=localStorage.getItem('soundOn')==='1';
 let soundOn=localStorage.getItem('soundOn')==='1';
-
 const feed=document.getElementById('feed');
 const sentinel=document.getElementById('sentinel');
 const template=document.getElementById('slide-template');
