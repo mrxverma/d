@@ -1,0 +1,6 @@
+body { background: linear-gradient(180deg,#f8f9fa,#e9ecef); }
+#chat .msg { max-width:70ch; }
+.msg-user { text-align:right; }
+.msg-user .bubble { background:#0d6efd; color:#fff; }
+.msg-assistant .bubble { background:#f1f1f1; }
+.bubble { display:inline-block; padding:.5rem 1rem; border-radius:1rem; margin:.25rem 0; }
