@@ -1,5 +1,7 @@
 let page=1,pageSize=10,loading=false,hasMore=true;
 let soundOn=localStorage.getItem('soundOn')==='1';
+let soundOn=localStorage.getItem('soundOn')==='1';
+
 const feed=document.getElementById('feed');
 const sentinel=document.getElementById('sentinel');
 const template=document.getElementById('slide-template');
@@ -42,6 +44,8 @@ function createSlide(item){
   const volBtn=slide.querySelector('.volume-btn');
   updateVolumeBtn(volBtn);
   volBtn.addEventListener('click',toggleSound);
+  slide.querySelector('.like-btn').addEventListener('click',()=>like(item.id,slide));
+
   const commentBtn=slide.querySelector('.comment-btn');
   const commentsEl=slide.querySelector('.comments');
   commentBtn.addEventListener('click',()=>{
@@ -66,6 +70,9 @@ async function like(id,slide,btn){
   if(localStorage.getItem('liked:'+id)) return;
   localStorage.setItem('liked:'+id,'1');
   btn.dataset.liked="true";
+async function like(id,slide){
+  if(localStorage.getItem('liked:'+id)) return;
+  localStorage.setItem('liked:'+id,'1');
   const countEl=slide.querySelector('.like-count');
   countEl.textContent=parseInt(countEl.textContent)+1;
   const res=await fetch(API.like,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:`short_id=${id}`});
@@ -122,6 +129,14 @@ function setActive(slide){
 function clearActive(slide){
   const iframe=slide.querySelector('iframe');
   if(iframe) sendCommand(iframe,'pauseVideo');
+   wrap.appendChild(iframe);
+  }
+  iframe.src=`https://www.youtube.com/embed/${ytid}?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1&loop=1&playlist=${ytid}`;
+}
+function clearActive(slide){
+  const iframe=slide.querySelector('iframe');
+  if(iframe) iframe.src='';
+
 }
 
 const videoObserver=new IntersectionObserver(entries=>{
