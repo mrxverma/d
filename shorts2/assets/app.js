@@ -1,10 +1,21 @@
 let page=1,pageSize=10,loading=false,hasMore=true;
 let soundOn=localStorage.getItem('soundOn')==='1';
-let soundOn=localStorage.getItem('soundOn')==='1';
-
 const feed=document.getElementById('feed');
 const sentinel=document.getElementById('sentinel');
 const template=document.getElementById('slide-template');
+const offcanvasEl=document.getElementById('commentsCanvas');
+const commentList=offcanvasEl.querySelector('.comment-list');
+const commentForm=offcanvasEl.querySelector('.comment-form');
+let currentCommentShortId=null;
+
+commentForm.addEventListener('submit',e=>{
+  e.preventDefault();
+  const username=commentForm.username.value.trim();
+  const comment=commentForm.comment.value.trim();
+  if(!username||!comment||currentCommentShortId===null) return;
+  postComment(currentCommentShortId,username,comment);
+  commentForm.reset();
+});
 
 async function fetchShorts(){
   if(loading||!hasMore) return;
@@ -44,24 +55,10 @@ function createSlide(item){
   const volBtn=slide.querySelector('.volume-btn');
   updateVolumeBtn(volBtn);
   volBtn.addEventListener('click',toggleSound);
-  slide.querySelector('.like-btn').addEventListener('click',()=>like(item.id,slide));
-
   const commentBtn=slide.querySelector('.comment-btn');
-  const commentsEl=slide.querySelector('.comments');
   commentBtn.addEventListener('click',()=>{
-    const open=commentsEl.dataset.open==='true';
-    commentsEl.dataset.open=!open;
-    commentsEl.setAttribute('aria-expanded',(!open).toString());
-    if(!open) loadComments(item.id,commentsEl);
-  });
-  const form=slide.querySelector('.comment-form');
-  form.addEventListener('submit',e=>{
-    e.preventDefault();
-    const username=form.username.value.trim();
-    const comment=form.comment.value.trim();
-    if(!username||!comment) return;
-    postComment(item.id,username,comment,commentsEl);
-    form.reset();
+    currentCommentShortId=item.id;
+    loadComments(item.id);
   });
   return slide;
 }
@@ -70,9 +67,6 @@ async function like(id,slide,btn){
   if(localStorage.getItem('liked:'+id)) return;
   localStorage.setItem('liked:'+id,'1');
   btn.dataset.liked="true";
-async function like(id,slide){
-  if(localStorage.getItem('liked:'+id)) return;
-  localStorage.setItem('liked:'+id,'1');
   const countEl=slide.querySelector('.like-count');
   countEl.textContent=parseInt(countEl.textContent)+1;
   const res=await fetch(API.like,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:`short_id=${id}`});
@@ -80,27 +74,25 @@ async function like(id,slide){
   if(data.likes_count!==undefined) countEl.textContent=data.likes_count;
 }
 
-async function loadComments(id,container){
-  const list=container.querySelector('.comment-list');
-  list.innerHTML='';
+async function loadComments(id){
+  commentList.innerHTML='';
   const res=await fetch(`${API.comments}?short_id=${id}`);
   const data=await res.json();
   data.items.forEach(c=>{
     const li=document.createElement('li');
     li.textContent=`${c.username}: ${c.comment}`;
-    list.appendChild(li);
+    commentList.appendChild(li);
   });
 }
 
-async function postComment(id,username,comment,container){
-  const list=container.querySelector('.comment-list');
+async function postComment(id,username,comment){
   const body=`short_id=${id}&username=${encodeURIComponent(username)}&comment=${encodeURIComponent(comment)}`;
   const res=await fetch(API.commentAdd,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});
   const data=await res.json();
   if(data.id){
     const li=document.createElement('li');
     li.textContent=`${data.username}: ${data.comment}`;
-    list.prepend(li);
+    commentList.prepend(li);
   }
 }
 
@@ -129,14 +121,6 @@ function setActive(slide){
 function clearActive(slide){
   const iframe=slide.querySelector('iframe');
   if(iframe) sendCommand(iframe,'pauseVideo');
-   wrap.appendChild(iframe);
-  }
-  iframe.src=`https://www.youtube.com/embed/${ytid}?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1&loop=1&playlist=${ytid}`;
-}
-function clearActive(slide){
-  const iframe=slide.querySelector('iframe');
-  if(iframe) iframe.src='';
-
 }
 
 const videoObserver=new IntersectionObserver(entries=>{
