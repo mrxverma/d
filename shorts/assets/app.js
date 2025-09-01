@@ -34,6 +34,7 @@ function createSlide(item){
   slide.dataset.id=item.id;
   const wrap=slide.querySelector('.video-wrap');
   wrap.dataset.ytid=parseYtId(item.link);
+
   slide.querySelector('.like-count').textContent=item.likes_count;
   slide.querySelector('.like-btn').addEventListener('click',()=>like(item.id,slide));
   const commentBtn=slide.querySelector('.comment-btn');
