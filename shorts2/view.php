@@ -2,13 +2,13 @@
 require_once 'db.php';
 
 function extract_video_id($url) {
-    // Match video IDs in different YouTube URL formats
     if (preg_match('~(?:youtu\.be/|youtube\.com/(?:watch\?v=|embed/|v/|shorts/))([\w-]{11})~x', $url, $matches)) {
         return $matches[1];
     }
     return '';
 }
 
+// Insert new short
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $url = trim($_POST['videoUrl'] ?? '');
     if ($url) {
@@ -21,8 +21,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
+// Fetch shorts + join with comments count
 $rows = [];
-$result = $conn->query('SELECT id, link FROM shorts ORDER BY time DESC');
+$sql = "
+    SELECT s.id, s.link, s.likes_count, s.time, COUNT(c.id) AS comment_count
+    FROM shorts s
+    LEFT JOIN comments c ON s.id = c.short_id
+    GROUP BY s.id
+    ORDER BY s.time DESC
+";
+$result = $conn->query($sql);
 if ($result) {
     while ($r = $result->fetch_assoc()) {
         $rows[] = $r;
@@ -36,53 +44,44 @@ if ($result) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Video Info Table</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   </head>
   <body class="bg-dark text-light p-3">
     <h1 class="mb-3">YouTube Video Info</h1>
     <form method="post" class="mb-3">
       <div class="row g-2">
         <div class="col">
-          <input
-            type="url"
-            name="videoUrl"
-            class="form-control"
-            placeholder="YouTube video URL"
-            required
-          />
+          <input type="url" name="videoUrl" class="form-control" placeholder="YouTube video URL" required />
         </div>
         <div class="col-auto">
           <button type="submit" class="btn btn-primary">Add</button>
         </div>
       </div>
     </form>
+
     <table class="table table-dark table-striped" id="videoTable">
       <thead>
         <tr>
-          <th scope="col">Thumbnail</th>
-          <th scope="col">Title</th>
-          <th scope="col">Likes</th>
-          <th scope="col">Comments</th>
-          <th scope="col">Uploaded</th>
-          <th scope="col">Link</th>
+          <th>Thumbnail</th>
+          <th>Title</th>
+          <th>Likes</th>
+          <th>Comments</th>
+          <th>Uploaded</th>
+          <th>Link</th>
         </tr>
       </thead>
       <tbody>
         <?php foreach ($rows as $row): $vid = extract_video_id($row['link']); ?>
-        <tr data-video-id="<?= htmlspecialchars($vid) ?>">
+        <tr>
           <td><img src="https://img.youtube.com/vi/<?= htmlspecialchars($vid) ?>/default.jpg" alt="thumb" /></td>
           <td class="title"></td>
-          <td class="likes"></td>
-          <td class="comments"></td>
-          <td class="uploaded"></td>
-          <td><a href="<?= htmlspecialchars($row['link']) ?>" class="video-link" target="_blank">Watch</a></td>
+          <td><?= (int)$row['likes_count'] ?></td>
+          <td><?= (int)$row['comment_count'] ?></td>
+          <td><?= htmlspecialchars($row['time']) ?></td>
+          <td><a href="<?= htmlspecialchars($row['link']) ?>" target="_blank">Watch</a></td>
         </tr>
         <?php endforeach; ?>
       </tbody>
     </table>
-    <script src="assets/video-table.js"></script>
   </body>
 </html>
