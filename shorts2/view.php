@@ -2,8 +2,9 @@
 require_once 'db.php';
 
 function extract_video_id($url) {
-    if (preg_match('/(?:v=|\.be\/)([\w-]{11})/', $url, $m)) {
-        return $m[1];
+    // Match video IDs in different YouTube URL formats
+    if (preg_match('~(?:youtu\.be/|youtube\.com/(?:watch\?v=|embed/|v/|shorts/))([\w-]{11})~x', $url, $matches)) {
+        return $matches[1];
     }
     return '';
 }

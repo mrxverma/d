@@ -31,7 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const video = await fetchVideoInfo(id);
     if (video) populateRow(row, video, id);
   });
-=======
 function addRow(video, id) {
   const tbody = document.querySelector("#videoTable tbody");
   const row = document.createElement("tr");
