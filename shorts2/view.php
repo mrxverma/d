@@ -21,21 +21,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// Fetch shorts + join with comments count
-$rows = [];
-$sql = "
-    SELECT s.id, s.link, s.likes_count, s.time, COUNT(c.id) AS comment_count
-    FROM shorts s
-    LEFT JOIN comments c ON s.id = c.short_id
-    GROUP BY s.id
-    ORDER BY s.time DESC
-";
-$result = $conn->query($sql);
+// Fetch shorts
+$shorts = [];
+$result = $conn->query("SELECT id, link, likes_count, time FROM shorts ORDER BY time DESC");
 if ($result) {
     while ($r = $result->fetch_assoc()) {
-        $rows[] = $r;
+        $shorts[$r['id']] = $r;
+        $shorts[$r['id']]['comments'] = []; // placeholder
     }
     $result->close();
+}
+
+// Fetch comments for all shorts
+if (!empty($shorts)) {
+    $ids = implode(',', array_keys($shorts));
+    $cresult = $conn->query("SELECT * FROM comments WHERE short_id IN ($ids) ORDER BY time ASC");
+    if ($cresult) {
+        while ($c = $cresult->fetch_assoc()) {
+            $shorts[$c['short_id']]['comments'][] = $c;
+        }
+        $cresult->close();
+    }
 }
 ?>
 <!doctype html>
@@ -71,12 +77,22 @@ if ($result) {
         </tr>
       </thead>
       <tbody>
-        <?php foreach ($rows as $row): $vid = extract_video_id($row['link']); ?>
+        <?php foreach ($shorts as $row): $vid = extract_video_id($row['link']); ?>
         <tr>
           <td><img src="https://img.youtube.com/vi/<?= htmlspecialchars($vid) ?>/default.jpg" alt="thumb" /></td>
           <td class="title"></td>
           <td><?= (int)$row['likes_count'] ?></td>
-          <td><?= (int)$row['comment_count'] ?></td>
+          <td>
+            <?php if (!empty($row['comments'])): ?>
+              <ul class="list-unstyled mb-0">
+                <?php foreach ($row['comments'] as $c): ?>
+                  <li><strong><?= htmlspecialchars($c['username']) ?>:</strong> <?= htmlspecialchars($c['comment']) ?> <small class="text-muted">(<?= $c['time'] ?>)</small></li>
+                <?php endforeach; ?>
+              </ul>
+            <?php else: ?>
+              <em>No comments</em>
+            <?php endif; ?>
+          </td>
           <td><?= htmlspecialchars($row['time']) ?></td>
           <td><a href="<?= htmlspecialchars($row['link']) ?>" target="_blank">Watch</a></td>
         </tr>
